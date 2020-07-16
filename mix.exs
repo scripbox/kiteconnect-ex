@@ -3,7 +3,7 @@ defmodule KiteconnectEx.MixProject do
 
   def project do
     [
-      app: :kiteconnect_ex,
+      app: :kite_connect_ex,
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
@@ -11,7 +11,7 @@ defmodule KiteconnectEx.MixProject do
       description: description(),
       package: package(),
       source_url: "https://github.com/scripbox/kiteconnect-ex",
-      homepage_url: "https://github.com/scripbox/kiteconnect-ex",
+      homepage_url: "https://github.com/scripbox/kiteconnect-ex"
     ]
   end
 
@@ -25,8 +25,8 @@ defmodule KiteconnectEx.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      {:httpoison, "~> 1.7"},
+      {:jason, "~> 1.2"}
     ]
   end
 

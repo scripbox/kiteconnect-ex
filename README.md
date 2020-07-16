@@ -2,6 +2,16 @@
 
 **Elixir client for Kite Connect APIs**
 
+## Documentation
+
+- [Client API documentation - ](https://github.com/scripbox/kiteconnect-ex)
+- [Kite Connect HTTP API documentation](https://kite.trade/docs/connect/v3)
+
+## Requirements
+
+- Elixir 1.10.1+
+- Erlang/OTP 21.3+
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
@@ -15,6 +25,14 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/kiteconnect_ex](https://hexdocs.pm/kiteconnect_ex).
+## Usage
+
+- Authentication
+- Place an Order
+- Modify an Order
+- Cancel an Order
+- Retrieve orders
+- Retrieve holdings
+- Retrieve positions
+- Postback
+- Logout
