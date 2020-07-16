@@ -16,6 +16,9 @@ defmodule KiteConnectEx.Request do
     recv_timeout: 5_000
   ]
 
+  @spec api_version() :: String.t()
+  def api_version, do: @api_version
+
   @spec get(String.t(), map() | nil, list, list) :: Response.success() | Response.error()
   def get(path, query, headers, opts \\ []) do
     HTTPoison.get(
