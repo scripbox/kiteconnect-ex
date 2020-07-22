@@ -26,7 +26,7 @@ defmodule KiteconnectEx.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.7"},
-      {:jason, "~> 1.2"}
+      {:jason, "~> 1.1"}
     ]
   end
 

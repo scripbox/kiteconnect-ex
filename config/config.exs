@@ -4,4 +4,8 @@ use Mix.Config
 
 config :kite_connect_ex,
   api_key: "api-key",
-  api_secret: "api-secret"
+  api_secret: "api-secret",
+  request_options: [
+    timeout: 5_000,
+    recv_timeout: 5_000
+  ]
