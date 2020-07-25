@@ -57,18 +57,18 @@ defmodule KiteConnectEx.User do
 
   ## Example
 
-    {:ok, url} = KiteConnectEx.User.get_login_url()
+    {:ok, url} = KiteConnectEx.User.get_login_url(%{foo: "bar"})
   """
-  @spec get_login_url() :: {:ok, String.t()}
-  def get_login_url do
-    query = URI.encode_query(%{v: Request.api_version(), api_key: api_key()})
+  @spec get_login_url(map) :: {:ok, String.t()}
+  def get_login_url(params \\ %{}) do
+    query =
+      %{v: Request.api_version(), api_key: KiteConnectEx.api_key()}
+      |> Map.put(:redirect_params, URI.encode_query(params))
+      |> URI.encode_query()
+
     login_url = @login_url <> "?" <> query
 
     {:ok, login_url}
-  end
-
-  defp api_key do
-    Application.get_env(:kite_connect_ex, :api_key)
   end
 
   @doc """
@@ -81,34 +81,26 @@ defmodule KiteConnectEx.User do
   @spec create_session(String.t()) :: {:ok, %__MODULE__{}} | Response.error()
   def create_session(request_token) when is_binary(request_token) do
     params = %{
-      api_key: api_key(),
+      api_key: KiteConnectEx.api_key(),
       request_token: request_token,
       checksum: generate_checksum(request_token)
     }
 
-    Request.post(@create_session_path, params, [], request_options())
+    Request.post(@create_session_path, params, [], KiteConnectEx.request_options())
     |> case do
       {:ok, user_data} ->
         user = %__MODULE__{new(user_data) | original_json: user_data}
 
         {:ok, user}
 
-      {:error, error, status} ->
-        {:error, error, status}
+      {:error, error} ->
+        {:error, error}
     end
   end
 
   defp generate_checksum(request_token) do
-    :crypto.hash(:sha256, api_key() <> request_token <> api_secret())
+    :crypto.hash(:sha256, KiteConnectEx.api_key() <> request_token <> KiteConnectEx.api_secret())
     |> Base.encode16(case: :lower)
-  end
-
-  defp api_secret do
-    Application.get_env(:kite_connect_ex, :api_secret)
-  end
-
-  defp request_options do
-    Application.get_env(:kite_connect_ex, :request_options, [])
   end
 
   defp new(attributes) when is_map(attributes) do
