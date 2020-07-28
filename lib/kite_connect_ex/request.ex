@@ -6,7 +6,6 @@ defmodule KiteConnectEx.Request do
 
   alias KiteConnectEx.Response
 
-  @base_url "https://api.kite.trade"
   @api_version 3
   @default_headers [{"X-Kite-version", @api_version}]
   @form_encoded_headers [{"Content-Type", "application/x-www-form-urlencoded"}]
@@ -63,14 +62,14 @@ defmodule KiteConnectEx.Request do
 
   defp build_url(path, nil) do
     %{
-      URI.parse(@base_url)
+      URI.parse(KiteConnectEx.base_url())
       | path: path
     }
   end
 
   defp build_url(path, query) do
     %{
-      URI.parse(@base_url)
+      URI.parse(KiteConnectEx.base_url())
       | path: path,
         query: query
     }

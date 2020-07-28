@@ -5,7 +5,7 @@ defmodule KiteconnectEx.MixProject do
     [
       app: :kite_connect_ex,
       version: "0.1.0",
-      elixir: "~> 1.10",
+      elixir: "~> 1.9.1",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: description(),
@@ -26,7 +26,8 @@ defmodule KiteconnectEx.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.7"},
-      {:jason, "~> 1.1"}
+      {:jason, "~> 1.1"},
+      {:bypass, "~> 1.0", only: :test}
     ]
   end
 

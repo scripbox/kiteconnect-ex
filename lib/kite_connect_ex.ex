@@ -1,4 +1,8 @@
 defmodule KiteConnectEx do
+  alias KiteConnectEx.{User, Response, Portfolio}
+
+  @api_url "https://api.kite.trade"
+
   @moduledoc """
   KiteConnectEx is an API client for the KiteConnect API.
   """
@@ -38,4 +42,46 @@ defmodule KiteConnectEx do
   def request_options do
     Application.get_env(:kite_connect_ex, :request_options, [])
   end
+
+  @doc """
+  Get KiteConnect API base_url
+
+  ## Example
+
+    base_url = KiteConnectEx.base_url()
+  """
+  @spec base_url() :: String.t()
+  def base_url do
+    Application.get_env(:kite_connect_ex, :base_url, @api_url)
+  end
+
+  @doc """
+  Get KiteConnect login endpoint
+
+  ## Example
+
+    {:ok, url} = KiteConnectEx.get_login_url(%{foo: "bar"})
+  """
+  @spec get_login_url(map) :: {:ok, String.t()}
+  defdelegate get_login_url(params), to: User
+
+  @doc """
+  Generate `access_token` using the `request_token`
+
+  ## Example
+
+    {:ok, user_profile} = KiteConnectEx.create_session("request-token")
+  """
+  @spec create_session(String.t()) :: {:ok, %User{}} | Response.error()
+  defdelegate create_session(request_token), to: User
+
+  @doc """
+  Get user's portfolio `holdings`
+
+  ## Example
+
+    {:ok, holdings} = KiteConnectEx.holdings("access-token")
+  """
+  @spec holdings(String.t()) :: {:ok, List.t()} | Response.error()
+  defdelegate holdings(access_token), to: Portfolio
 end
