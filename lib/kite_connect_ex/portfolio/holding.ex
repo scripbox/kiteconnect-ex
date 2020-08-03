@@ -33,6 +33,7 @@ defmodule KiteConnectEx.Portfolio.Holding do
           collateral_type: String.t() | nil
         }
 
+  @derive {Jason.Encoder, only: Keyword.keys(@keys)}
   defstruct @keys
 
   def new(attributes) when is_map(attributes) do
