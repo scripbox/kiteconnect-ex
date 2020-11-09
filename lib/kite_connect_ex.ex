@@ -92,6 +92,6 @@ defmodule KiteConnectEx do
 
     {:ok, instruments} = KiteConnectEx.instruments("access-token")
   """
-  @spec instruments(String.t(),String.t()) :: {:ok, List.t()} | Response.error()
+  @spec instruments(String.t(), String.t()) :: {:ok, List.t()} | Response.error()
   defdelegate instruments(access_token, exchange), to: Instrument
 end

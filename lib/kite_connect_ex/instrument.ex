@@ -17,7 +17,12 @@ defmodule KiteConnectEx.Instrument do
   """
   @spec instruments(String.t(), String.t()) :: {:ok, List.t()} | Response.error()
   def instruments(access_token, exchange) when is_binary(access_token) do
-    Request.get(instruments_path(exchange), nil, auth_header(access_token), KiteConnectEx.request_options())
+    Request.get(
+      instruments_path(exchange),
+      nil,
+      auth_header(access_token),
+      KiteConnectEx.request_options()
+    )
     |> case do
       {:ok, instruments_csv_dump} ->
         {:ok, instruments_csv_dump}
@@ -28,7 +33,7 @@ defmodule KiteConnectEx.Instrument do
   end
 
   defp instruments_path(exchange) do
-    @instruments_base_path <> "/" <> exchange    
+    @instruments_base_path <> "/" <> exchange
   end
 
   defp auth_header(access_token) do

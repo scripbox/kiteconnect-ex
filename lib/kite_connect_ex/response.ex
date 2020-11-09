@@ -24,7 +24,10 @@ defmodule KiteConnectEx.Response do
   def parse_response(%HTTPoison.Response{} = response) do
     case response do
       %{body: body, status_code: status} when status in @success_status_codes ->
-        {:ok, body}
+        body =
+          body
+          |> Jason.decode!()
+          |> parse_body()
 
       %{body: body, status_code: _status} ->
         error =
