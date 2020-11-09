@@ -1,5 +1,5 @@
 defmodule KiteConnectEx do
-  alias KiteConnectEx.{User, Response, Portfolio}
+  alias KiteConnectEx.{User, Response, Portfolio, Instrument}
 
   @api_url "https://api.kite.trade"
 
@@ -84,4 +84,14 @@ defmodule KiteConnectEx do
   """
   @spec holdings(String.t()) :: {:ok, List.t()} | Response.error()
   defdelegate holdings(access_token), to: Portfolio
+
+  @doc """
+  Get list of all tradable `instruments` by `exchange`
+
+  ## Example
+
+    {:ok, instruments} = KiteConnectEx.instruments("access-token")
+  """
+  @spec instruments(String.t(),String.t()) :: {:ok, List.t()} | Response.error()
+  defdelegate instruments(access_token, exchange), to: Instrument
 end
