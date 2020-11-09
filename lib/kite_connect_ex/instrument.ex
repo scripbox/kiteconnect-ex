@@ -1,6 +1,6 @@
 defmodule KiteConnectEx.Instrument do
   @moduledoc """
-  Module to represent a user's portfolio
+  Module to retrieve a list of tradable `instruments`
   """
 
   alias KiteConnectEx.Portfolio.Holding
@@ -9,11 +9,11 @@ defmodule KiteConnectEx.Instrument do
   @instruments_base_path "/instruments"
 
   @doc """
-  Get user's portfolio `holdings`
+  Get all tradable `instruments` by `exchange`
 
   ## Example
 
-    {:ok, holdings} = KiteConnectEx.Portfolio.holdings("access-token")
+    {:ok, instruments} = KiteConnectEx.Portfolio.instruments("access-token", "NSE")
   """
   @spec instruments(String.t(), String.t()) :: {:ok, List.t()} | Response.error()
   def instruments(access_token, exchange) when is_binary(access_token) do
