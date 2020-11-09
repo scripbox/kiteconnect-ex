@@ -29,6 +29,8 @@ defmodule KiteConnectEx.Response do
           |> Jason.decode!()
           |> parse_body()
 
+          {:ok, body}
+
       %{body: body, status_code: _status} ->
         error =
           body
