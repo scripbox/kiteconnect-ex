@@ -7,29 +7,42 @@ defmodule KiteConnectEx.Response do
   @success_status "success"
   @error_status "error"
 
+
+  @csv_content_type {"Content-Type", "text/csv"}
+
   @doc false
   @spec parse_response(HTTPoison.Response.t()) :: success | error
   def parse_response(%HTTPoison.Response{} = response) do
     case response do
-      %{body: body, headers: [_ | [{"Content-Type", "text/csv"} | _tail]]} ->
-        {:ok, body}
+      %{body: body, headers: headers, status_code: status} when status in @success_status_codes ->
+        {:ok, do_parse_response(headers, body)}
 
-      %{body: body, status_code: status} when status in @success_status_codes ->
-        body =
-          body
-          |> Jason.decode!()
-          |> parse_body()
-
-        {:ok, body}
-
-      %{body: body, status_code: _status} ->
-        error =
-          body
-          |> Jason.decode!()
-          |> parse_body()
-
-        {:error, error}
+      %{body: body, headers: headers, status_code: _status} ->
+        {:error, do_parse_response(headers, body)}
     end
+  end
+
+  defp do_parse_response(headers, body) do
+    has_csv_header?(headers)
+    |> case do
+      true ->
+        body
+
+      _ ->
+        body
+        |> Jason.decode!()
+        |> parse_body()
+    end
+  end
+
+  defp has_csv_header?([]), do: false
+
+  defp has_csv_header?([header | _tail]) when header == @csv_content_type do
+    true
+  end
+
+  defp has_csv_header?([_header | tail]) do
+    has_csv_header?(tail)
   end
 
   @doc false
