@@ -18,16 +18,6 @@ defmodule KiteConnectEx.Request do
   @spec api_version() :: String.t()
   def api_version, do: @api_version
 
-  @spec get_csv(String.t(), map() | nil, list, list) :: Response.success() | Response.error()
-  def get_csv(path, query, headers, opts \\ []) do
-    HTTPoison.get(
-      build_url(path, query),
-      build_headers(headers),
-      request_options(opts)
-    )
-    |> parse_csv_response()
-  end
-
   @spec get(String.t(), map() | nil, list, list) :: Response.success() | Response.error()
   def get(path, query, headers, opts \\ []) do
     HTTPoison.get(
@@ -115,10 +105,6 @@ defmodule KiteConnectEx.Request do
 
   defp parse_response({:ok, response}) do
     Response.parse_response(response)
-  end
-
-  defp parse_csv_response({:ok, response}) do
-    Response.parse_csv_response(response)
   end
 
   defp parse_response({:error, error}) do

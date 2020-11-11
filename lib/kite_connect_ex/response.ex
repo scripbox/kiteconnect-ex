@@ -8,28 +8,19 @@ defmodule KiteConnectEx.Response do
   @error_status "error"
 
   @doc false
-  @spec parse_csv_response(HTTPoison.Response.t()) :: success | error
-  def parse_csv_response(%HTTPoison.Response{} = response) do
-    case response do
-      %{body: body, status_code: status} when status in @success_status_codes ->
-        {:ok, body}
-
-      %{body: body, status_code: _status} ->
-        {:error, KiteConnectEx.Error.new(body)}
-    end
-  end
-
-  @doc false
   @spec parse_response(HTTPoison.Response.t()) :: success | error
   def parse_response(%HTTPoison.Response{} = response) do
     case response do
+      %{body: body, headers: [_ | [{"Content-Type", "text/csv"} | _tail]]} ->
+        {:ok, body}
+
       %{body: body, status_code: status} when status in @success_status_codes ->
         body =
           body
           |> Jason.decode!()
           |> parse_body()
 
-          {:ok, body}
+        {:ok, body}
 
       %{body: body, status_code: _status} ->
         error =
