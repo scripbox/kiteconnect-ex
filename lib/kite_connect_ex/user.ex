@@ -91,6 +91,7 @@ defmodule KiteConnectEx.User do
     |> case do
       {:ok, data} ->
         funds_and_margins = FundAndMargin.new(data)
+         |> Map.put(:margin_data, data)
 
         {:ok, funds_and_margins}
 
