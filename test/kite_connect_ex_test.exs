@@ -148,6 +148,90 @@ defmodule KiteConnectExTest do
     """
   end
 
+  describe "funds_and_margins/2" do
+    test "returns funds and margins for equity with valid response", %{bypass: bypass} do
+      Bypass.expect_once(bypass, "GET", "/user/margins/equity", fn conn ->
+        Plug.Conn.resp(conn, 201, funds_and_margins_response())
+      end)
+
+      assert KiteConnectEx.funds_and_margins("access-token", "equity") ==
+               {:ok,
+                %KiteConnectEx.User.FundAndMargin{
+                  available: %KiteConnectEx.User.FundAndMargin.AvailableSegment{
+                    adhoc_margin: 0,
+                    cash: 622.32,
+                    collateral: 0,
+                    intraday_payin: 0
+                  },
+                  enabled: true,
+                  net: 622.32,
+                  utilised: %KiteConnectEx.User.FundAndMargin.UtilisedSegment{
+                    debits: 0,
+                    exposure: 0,
+                    holding_sales: 0,
+                    m2m_realised: 0,
+                    m2m_unrealised: 0,
+                    option_premium: 0,
+                    payout: 0,
+                    span: 0,
+                    turnover: 0
+                  }
+                }}
+    end
+
+    test "returns error if API request fails", %{bypass: bypass} do
+      Bypass.expect_once(bypass, "GET", "/user/margins/equity", fn conn ->
+        Plug.Conn.resp(
+          conn,
+          403,
+          ~s<{"status": "error", "error_type": "TokenException", "message": "Invalid access_token"}>
+        )
+      end)
+
+      assert KiteConnectEx.funds_and_margins("access-token", "equity") ==
+               {:error,
+                %KiteConnectEx.Error{
+                  code: 403,
+                  error_type: "TokenException",
+                  message: "Invalid access_token"
+                }}
+    end
+
+    defp funds_and_margins_response do
+      """
+      {
+        "status": "success",
+        "data": {
+          "available": {
+            "adhoc_margin": 0,
+            "cash": 622.32,
+            "collateral": 0,
+            "intraday_payin": 0,
+            "live_balance": 622.32,
+            "opening_balance": 622.32
+          },
+          "enabled": true,
+          "net": 622.32,
+          "utilised": {
+            "debits": 0,
+            "delivery": 0,
+            "exposure": 0,
+            "holding_sales": 0,
+            "liquid_collateral": 0,
+            "m2m_realised": 0,
+            "m2m_unrealised": 0,
+            "option_premium": 0,
+            "payout": 0,
+            "span": 0,
+            "stock_collateral": 0,
+            "turnover": 0
+          }
+        }
+      }
+      """
+    end
+  end
+
   describe "holdings/1" do
     test "returns portfolio holdings with valid access_token", %{bypass: bypass} do
       Bypass.expect_once(bypass, "GET", "/portfolio/holdings", fn conn ->

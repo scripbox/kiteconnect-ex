@@ -33,6 +33,7 @@ end
 - Cancel an Order
 - Retrieve orders
 - Retrieve holdings
+- Retrieve funds and margins
 - Retrieve positions
 - Postback
 - Logout

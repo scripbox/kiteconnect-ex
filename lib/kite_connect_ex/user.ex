@@ -6,9 +6,11 @@ defmodule KiteConnectEx.User do
   """
 
   alias KiteConnectEx.Request
+  alias KiteConnectEx.User.FundAndMargin
 
   @login_url "https://kite.zerodha.com/connect/login"
   @create_session_path "/session/token"
+  @funds_and_margins_path "/user/margins"
 
   @keys [
     access_token: nil,
@@ -72,6 +74,32 @@ defmodule KiteConnectEx.User do
   end
 
   @doc """
+  Get user's funds and margins of segments: "equity" || "commodity"
+  default segment_type: equity
+
+  ## Example
+
+    {:ok, funds_and_margins} = KiteConnectEx.User.funds_and_margins("access-token")
+
+    {:ok, funds_and_margins} = KiteConnectEx.User.funds_and_margins("access-token", "commodity")
+  """
+  @spec funds_and_margins(String.t(), String.t()) :: {:ok, %__MODULE__{}} | Response.error()
+  def funds_and_margins(access_token, segment_type \\ "equity") when is_binary(access_token) do
+    url = @funds_and_margins_path <> "/" <> segment_type
+
+    Request.get(url, nil, auth_header(access_token), KiteConnectEx.request_options())
+    |> case do
+      {:ok, data} ->
+        funds_and_margins = FundAndMargin.new(data)
+
+        {:ok, funds_and_margins}
+
+      {:error, error} ->
+        {:error, error}
+    end
+  end
+
+  @doc """
   Generate `access_token` using the `request_token`
 
   ## Example
@@ -127,5 +155,9 @@ defmodule KiteConnectEx.User do
 
   defp new(_) do
     struct(__MODULE__, %{})
+  end
+
+  defp auth_header(access_token) do
+    [{"Authorization", "token " <> KiteConnectEx.api_key() <> ":" <> access_token}]
   end
 end

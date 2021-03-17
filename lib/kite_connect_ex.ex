@@ -94,4 +94,14 @@ defmodule KiteConnectEx do
   """
   @spec instruments(String.t(), String.t()) :: {:ok, List.t()} | Response.error()
   defdelegate instruments(access_token, exchange), to: Instrument
+
+  @doc """
+  Get user's margins `funds_and_margins`
+
+  ## Example
+
+    {:ok, funds_and_margins} = KiteConnectEx.funds_and_margins("access-token", "equity")
+  """
+  @spec funds_and_margins(String.t(), String.t()) :: {:ok, List.t()} | Response.error()
+  defdelegate funds_and_margins(access_token, segment_type), to: User
 end

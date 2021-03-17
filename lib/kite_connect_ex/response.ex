@@ -7,7 +7,6 @@ defmodule KiteConnectEx.Response do
   @success_status "success"
   @error_status "error"
 
-
   @csv_content_type {"Content-Type", "text/csv"}
 
   @doc false
