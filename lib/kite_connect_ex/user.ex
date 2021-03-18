@@ -90,8 +90,9 @@ defmodule KiteConnectEx.User do
     Request.get(url, nil, auth_header(access_token), KiteConnectEx.request_options())
     |> case do
       {:ok, data} ->
-        funds_and_margins = FundAndMargin.new(data)
-         |> Map.put(:margin_data, data)
+        funds_and_margins =
+          FundAndMargin.new(data)
+          |> Map.put(:margin_data, data)
 
         {:ok, funds_and_margins}
 

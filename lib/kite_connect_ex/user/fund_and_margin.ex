@@ -12,14 +12,16 @@ defmodule KiteConnectEx.User.FundAndMargin do
     enabled: false,
     net: nil,
     available: nil,
-    utilised: nil
+    utilised: nil,
+    margin_data: nil
   ]
 
   @type t :: %__MODULE__{
           enabled: Bool.t(),
           net: Float.t(),
           available: %AvailableSegment{},
-          utilised: %UtilisedSegment{}
+          utilised: %UtilisedSegment{},
+          margin_data: %{}
         }
 
   @derive {Jason.Encoder, only: Keyword.keys(@keys)}
@@ -30,7 +32,8 @@ defmodule KiteConnectEx.User.FundAndMargin do
       enabled: attributes["enabled"],
       net: attributes["net"],
       available: AvailableSegment.new(attributes["available"]),
-      utilised: UtilisedSegment.new(attributes["utilised"])
+      utilised: UtilisedSegment.new(attributes["utilised"]),
+      margin_data: attributes["margin_data"]
     })
   end
 
