@@ -175,6 +175,32 @@ defmodule KiteConnectExTest do
                     payout: 0,
                     span: 0,
                     turnover: 0
+                  },
+                  margin_data: %{
+                    "available" => %{
+                      "adhoc_margin" => 0,
+                      "cash" => 622.32,
+                      "collateral" => 0,
+                      "intraday_payin" => 0,
+                      "live_balance" => 622.32,
+                      "opening_balance" => 622.32
+                    },
+                    "enabled" => true,
+                    "net" => 622.32,
+                    "utilised" => %{
+                      "debits" => 0,
+                      "delivery" => 0,
+                      "exposure" => 0,
+                      "holding_sales" => 0,
+                      "liquid_collateral" => 0,
+                      "m2m_realised" => 0,
+                      "m2m_unrealised" => 0,
+                      "option_premium" => 0,
+                      "payout" => 0,
+                      "span" => 0,
+                      "stock_collateral" => 0,
+                      "turnover" => 0
+                    }
                   }
                 }}
     end
