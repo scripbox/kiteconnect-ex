@@ -1,5 +1,6 @@
 defmodule KiteConnectExTest do
   use ExUnit.Case
+  alias KiteConnectEx.SampleResponse.Orders.{Order}
 
   setup do
     bypass = Bypass.open()
@@ -253,6 +254,111 @@ defmodule KiteConnectExTest do
             "turnover": 0
           }
         }
+      }
+      """
+    end
+  end
+
+  describe "orders/1" do
+    test "returns orders with valid response", %{bypass: bypass} do
+      Bypass.expect_once(bypass, "GET", "/orders", fn conn ->
+        Plug.Conn.resp(conn, 201, all_orders())
+      end)
+
+      assert KiteConnectEx.orders("access-token") ==
+      {:ok,
+      [
+        %{
+          "average_price" => 0,
+          "cancelled_quantity" => 0,
+          "disclosed_quantity" => 0,
+          "exchange" => "NSE",
+          "exchange_order_id" => "1300000009032605",
+          "exchange_timestamp" => "2021-04-01 13:31:36",
+          "exchange_update_timestamp" => "2021-04-01 13:31:36",
+          "filled_quantity" => 0,
+          "guid" => "3106Xndfsskwjufvb",
+          "instrument_token" => 1522689,
+          "market_protection" => 0,
+          "meta" => %{},
+          "order_id" => "210401003340053",
+          "order_timestamp" => "2021-04-01 13:31:35",
+          "order_type" => "LIMIT",
+          "parent_order_id" => nil,
+          "pending_quantity" => 1,
+          "placed_by" => "XG0030",
+          "price" => 8.55,
+          "product" => "MIS",
+          "quantity" => 1,
+          "status" => "OPEN",
+          "status_message" => nil,
+          "status_message_raw" => nil,
+          "tag" => nil,
+          "tradingsymbol" => "SOUTHBANK",
+          "transaction_type" => "BUY",
+          "trigger_price" => 0,
+          "validity" => "DAY",
+          "variety" => "regular"
+        }
+      ]}
+    end
+
+    test "returns error if API request fails", %{bypass: bypass} do
+      Bypass.expect_once(bypass, "GET", "/orders", fn conn ->
+        Plug.Conn.resp(
+          conn,
+          403,
+          ~s<{"status": "error", "error_type": "TokenException", "message": "Invalid access_token"}>
+        )
+      end)
+
+      assert KiteConnectEx.orders("access-token") ==
+               {:error,
+                %KiteConnectEx.Error{
+                  code: 403,
+                  error_type: "TokenException",
+                  message: "Invalid access_token"
+                }}
+    end
+
+    def all_orders() do
+      """
+      {
+        "data": [
+          {
+            "average_price": 0,
+            "cancelled_quantity": 0,
+            "disclosed_quantity": 0,
+            "exchange": "NSE",
+            "exchange_order_id": "1300000009032605",
+            "exchange_timestamp": "2021-04-01 13:31:36",
+            "exchange_update_timestamp": "2021-04-01 13:31:36",
+            "filled_quantity": 0,
+            "guid": "3106Xndfsskwjufvb",
+            "instrument_token": 1522689,
+            "market_protection": 0,
+            "meta": {},
+            "order_id": "210401003340053",
+            "order_timestamp": "2021-04-01 13:31:35",
+            "order_type": "LIMIT",
+            "parent_order_id": null,
+            "pending_quantity": 1,
+            "placed_by": "XG0030",
+            "price": 8.55,
+            "product": "MIS",
+            "quantity": 1,
+            "status": "OPEN",
+            "status_message": null,
+            "status_message_raw": null,
+            "tag": null,
+            "tradingsymbol": "SOUTHBANK",
+            "transaction_type": "BUY",
+            "trigger_price": 0,
+            "validity": "DAY",
+            "variety": "regular"
+          }
+        ],
+        "status": "success"
       }
       """
     end
