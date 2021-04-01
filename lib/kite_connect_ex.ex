@@ -1,5 +1,5 @@
 defmodule KiteConnectEx do
-  alias KiteConnectEx.{User, Response, Portfolio, Instrument}
+  alias KiteConnectEx.{User, Response, Portfolio, Instrument, Orders}
 
   @api_url "https://api.kite.trade"
 
@@ -104,4 +104,14 @@ defmodule KiteConnectEx do
   """
   @spec funds_and_margins(String.t(), String.t()) :: {:ok, List.t()} | Response.error()
   defdelegate funds_and_margins(access_token, segment_type), to: User
+
+  @doc """
+  Get user's all orders `all_orders`
+
+  ## Example
+
+    {:ok, orders} = KiteConnectEx.all_orders("access-token")
+  """
+  @spec orders(String.t()) :: {:ok, List.t()} | Response.error()
+  defdelegate orders(access_token), to: Orders, as: :all_orders
 end
